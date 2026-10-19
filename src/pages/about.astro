@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AUTHOR_NAME, LINKS } from '../consts';
+---
+
+<BaseLayout title="自己紹介" description={`${AUTHOR_NAME} の自己紹介`}>
+  <div class="wrap prose">
+    <h1>自己紹介</h1>
+
+    <!-- ▼ ここを自分の言葉に書き換えてください -->
+    <p>
+      {AUTHOR_NAME} です。大学院で応用物理を学んでいます。日常的なことについて書いていきます。
+    </p>
+
+    <h2>関心のあるテーマ</h2>
+    <ul>
+      <li>パチスロ</li>
+      <li>映画とアニメ</li>
+      <li>配信みること</li>
+    </ul>
+
+    <h2>連絡先・リンク</h2>
+    <ul>
+      {LINKS.linkedin && (
+        <li>
+          <a href={LINKS.linkedin} rel="me noopener">LinkedIn</a>
+        </li>
+      )}
+      {LINKS.github && (
+        <li>
+          <a href={LINKS.github} rel="me noopener">GitHub</a>
+        </li>
+      )}
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 1.75rem;
+    margin: 0 0 1.5rem;
+  }
+</style>

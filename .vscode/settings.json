@@ -1,0 +1,7 @@
+{
+  "markdown.copyFiles.destination": {
+    "/src/content/blog/**/*": "images/${documentBaseName}/${fileName}"
+  },
+  "markdown.editor.drop.copyIntoWorkspace": "mediaFiles",
+  "markdown.editor.filePaste.copyIntoWorkspace": "mediaFiles"
+}

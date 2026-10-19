@@ -1,0 +1,66 @@
+---
+// ウェハーのダイマップ。記事が1本増えるごとに、ダイが1つ点灯します。
+interface Props {
+  lit?: number;
+  label?: string;
+}
+const { lit = 0, label = 'ウェハーのダイマップ' } = Astro.props;
+
+const R = 92; // ウェハー半径
+const C = 100; // 中心座標
+const PITCH = 13; // ダイの間隔
+const SIZE = 11; // ダイの大きさ
+const N = Math.ceil((R * 2) / PITCH);
+const start = C - (N * PITCH) / 2;
+
+const inside = (x: number, y: number) => (x - C) ** 2 + (y - C) ** 2 <= (R - 3) ** 2;
+
+const dies: { x: number; y: number }[] = [];
+for (let row = 0; row < N; row++) {
+  for (let col = 0; col < N; col++) {
+    const x = start + col * PITCH + (PITCH - SIZE) / 2;
+    const y = start + row * PITCH + (PITCH - SIZE) / 2;
+    const ok =
+      inside(x, y) && inside(x + SIZE, y) && inside(x, y + SIZE) && inside(x + SIZE, y + SIZE) && y + SIZE < C + R - 10;
+    if (ok) dies.push({ x, y });
+  }
+}
+
+// 中心付近から外側へ、らせん状に点灯させる順番
+const order = dies
+  .map((d, i) => ({ i, dist: Math.hypot(d.x + SIZE / 2 - C, d.y + SIZE / 2 - C), ang: Math.atan2(d.y - C, d.x - C) }))
+  .sort((a, b) => a.dist - b.dist || a.ang - b.ang)
+  .map((d) => d.i);
+const litSet = new Set(order.slice(0, Math.min(lit, dies.length)));
+---
+
+<svg class="wafer" viewBox="0 0 200 200" role="img" aria-label={label}>
+  <path
+    class="wafer-disc"
+    d={`M ${C - 9} ${C + R - 0.5} A ${R} ${R} 0 1 1 ${C + 9} ${C + R - 0.5} L ${C + 9} ${C + R - 0.5} Q ${C} ${C + R - 7} ${C - 9} ${C + R - 0.5} Z`}
+  ></path>
+  {
+    dies.map((d, i) => (
+      <rect x={d.x} y={d.y} width={SIZE} height={SIZE} rx="1" class={litSet.has(i) ? 'die die-lit' : 'die'}></rect>
+    ))
+  }
+</svg>
+
+<style>
+  .wafer {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .wafer-disc {
+    fill: var(--wafer);
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+  .die {
+    fill: var(--die);
+  }
+  .die-lit {
+    fill: var(--amber);
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../utils';
+---
+
+<BaseLayout title="ページが見つかりません">
+  <div class="wrap">
+    <h1>ページが見つかりません</h1>
+    <p>URL が間違っているか、ページが移動した可能性があります。</p>
+    <p><a href={url('/')}>トップページへ</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 1.75rem;
+    margin: 0 0 1rem;
+  }
+</style>

@@ -1,0 +1,165 @@
+/* 色はここで一括管理しています。好みに合わせて変えてください。 */
+:root {
+  --paper: #f5f6f4; /* 背景：シリコンのような明るいグレー */
+  --ink: #1b2130; /* 本文 */
+  --muted: #5d6676; /* 日付・補足 */
+  --rule: #d4d8dd; /* 区切り線 */
+  --amber: #e2ac2f; /* クリーンルームの黄色い照明 */
+  --amber-ink: #8a5f00; /* 白背景で読める濃さの黄 */
+  --wafer: #e3e6ea;
+  --die: #c9ced6;
+  --code-bg: #e9ecef;
+
+  --font: 'IBM Plex Sans JP', system-ui, sans-serif;
+  --measure: 40rem;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #161a21;
+    --ink: #e6e8ec;
+    --muted: #9aa3b2;
+    --rule: #2c323d;
+    --amber: #f0b93a;
+    --amber-ink: #f0b93a;
+    --wafer: #222833;
+    --die: #343c49;
+    --code-bg: #20252e;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  font-feature-settings: 'palt' 0;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--amber);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--amber-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ---- 記事本文 ---- */
+.prose h2 {
+  font-size: 1.35rem;
+  line-height: 1.5;
+  margin: 2.6em 0 0.8em;
+  padding-left: 0.7rem;
+  border-left: 4px solid var(--amber);
+}
+
+.prose h3 {
+  font-size: 1.12rem;
+  margin: 2em 0 0.6em;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 1.3em;
+}
+
+.prose li + li {
+  margin-top: 0.3em;
+}
+
+.prose blockquote {
+  margin: 1.5em 0;
+  padding: 0.2em 1.1em;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+}
+
+.prose code {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 0.12em 0.35em;
+  border-radius: 4px;
+}
+
+.prose pre {
+  padding: 1rem 1.1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  font-size: 0.95rem;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.5em 0.8em;
+  text-align: left;
+}
+
+.prose img {
+  height: auto;
+  border-radius: 6px;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2.5em 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -1,0 +1,75 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url, formatDate } from '../utils';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+const { posts } = Astro.props;
+---
+
+{
+  posts.length === 0 ? (
+    <p class="empty">まだ記事がありません。src/content/blog/ に .md ファイルを追加すると、ここに表示されます。</p>
+  ) : (
+    <ul class="posts">
+      {posts.map((post) => (
+        <li>
+          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+          <div>
+            <a href={url(`/blog/${post.id}/`)}>{post.data.title}</a>
+            <p>{post.data.description}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .posts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .posts li {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 0.25rem 1.25rem;
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .posts li:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  time {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.15rem;
+  }
+  .posts a {
+    font-weight: 700;
+    font-size: 1.08rem;
+    text-decoration: none;
+    line-height: 1.6;
+  }
+  .posts a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+  }
+  .posts p {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .empty {
+    color: var(--muted);
+  }
+  @media (max-width: 520px) {
+    .posts li {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Wafer from '../components/Wafer.astro';
+import PostList from '../components/PostList.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { url } from '../utils';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const latest = posts.slice(0, 5);
+---
+
+<BaseLayout>
+  <section class="wrap hero">
+    <div class="hero-text">
+      <h1>{SITE_TITLE}</h1>
+      <p>{SITE_DESCRIPTION}</p>
+    </div>
+    <figure class="hero-wafer">
+      <Wafer lit={posts.length} label={`記事 ${posts.length} 本分のダイが点灯したウェハー`} />
+      <figcaption>記事 {posts.length} 本分が点灯中</figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap latest" aria-labelledby="latest-heading">
+    <h2 id="latest-heading">新しい記事</h2>
+    <PostList posts={latest} />
+    {posts.length > latest.length && <a class="more" href={url('/blog/')}>すべての記事を見る</a>}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 9.5rem;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.6rem;
+  }
+  .hero-text p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .hero-wafer {
+    margin: 0;
+  }
+  figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--muted);
+    text-align: center;
+  }
+  .latest h2 {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+  }
+  .more {
+    display: inline-block;
+    margin-top: 1.25rem;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 520px) {
+    .hero {
+      grid-template-columns: 1fr 6.5rem;
+      gap: 1rem;
+    }
+  }
+</style>
