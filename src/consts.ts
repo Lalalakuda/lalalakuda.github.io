@@ -9,3 +9,6 @@ export const LINKS = {
   linkedin: 'https://www.linkedin.com/in/your-id/',
   github: 'https://github.com/YOUR-USERNAME',
 };
+
+// 訪問者カウンター（GoatCounter）。登録したコード（○○.goatcounter.com の ○○）を入れると有効になります
+export const GOATCOUNTER_CODE = 'lalalakuda';

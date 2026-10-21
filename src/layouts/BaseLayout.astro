@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR_NAME, LINKS } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR_NAME, LINKS, GOATCOUNTER_CODE } from '../consts';
 import { url } from '../utils';
 
 interface Props {
@@ -43,11 +43,26 @@ const current = Astro.url.pathname;
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- 訪問者カウンター（GoatCounter） -->
+    {
+      GOATCOUNTER_CODE && (
+        <script
+          is:inline
+          data-goatcounter={`https://${GOATCOUNTER_CODE}.goatcounter.com/count`}
+          async
+          src="//gc.zgo.at/count.js"
+        />
+      )
+    }
   </head>
   <body>
     <header class="site-header">
       <div class="wrap header-inner">
-        <a class="brand" href={url('/')}>{SITE_TITLE}</a>
+        <a class="brand" href={url('/')}>
+          <img src={url('/logo.svg')} alt="" width="36" height="36" />
+          {SITE_TITLE}
+        </a>
         <nav aria-label="メインメニュー">
           <ul>
             {
@@ -70,7 +85,12 @@ const current = Astro.url.pathname;
 
     <footer class="site-footer">
       <div class="wrap footer-inner">
-        <p>© {year} {AUTHOR_NAME}</p>
+        <p>
+          © {year} {AUTHOR_NAME}
+          <span class="visits" id="visits" data-code={GOATCOUNTER_CODE} hidden>
+            ・累計 <span></span> 人が訪問
+          </span>
+        </p>
         <ul>
           {LINKS.linkedin && (
             <li>
@@ -85,6 +105,20 @@ const current = Astro.url.pathname;
         </ul>
       </div>
     </footer>
+    <script is:inline>
+      (() => {
+        const el = document.getElementById('visits');
+        if (!el || !el.dataset.code) return;
+        fetch(`https://${el.dataset.code}.goatcounter.com/counter/TOTAL.json`)
+          .then((r) => (r.ok ? r.json() : null))
+          .then((d) => {
+            if (!d) return;
+            el.querySelector('span').textContent = d.count;
+            el.hidden = false;
+          })
+          .catch(() => {});
+      })();
+    </script>
   </body>
 </html>
 
@@ -100,6 +134,9 @@ const current = Astro.url.pathname;
     min-height: 3.75rem;
   }
   .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-weight: 700;
     text-decoration: none;
     letter-spacing: 0.01em;
@@ -139,5 +176,8 @@ const current = Astro.url.pathname;
   }
   .footer-inner p {
     margin: 0;
+  }
+  .brand img {
+    display: block;
   }
 </style>
