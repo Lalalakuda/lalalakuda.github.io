@@ -2,8 +2,8 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Wafer from '../components/Wafer.astro';
+import Banner from '../components/Banner.astro';
 import PostList from '../components/PostList.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { url } from '../utils';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
@@ -15,8 +15,7 @@ const latest = posts.slice(0, 5);
 <BaseLayout>
   <section class="wrap hero">
     <div class="hero-text">
-      <h1>{SITE_TITLE}</h1>
-      <p>{SITE_DESCRIPTION}</p>
+      <h1><span class="visually-hidden">ラララクダの部屋</span><Banner /></h1>
     </div>
     <figure class="hero-wafer">
       <Wafer lit={posts.length} label={`記事 ${posts.length} 本分のダイが点灯したウェハー`} />
@@ -40,14 +39,16 @@ const latest = posts.slice(0, 5);
     margin-bottom: 3rem;
   }
   h1 {
-    font-size: clamp(2rem, 6vw, 2.75rem);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    margin: 0 0 0.6rem;
-  }
-  .hero-text p {
     margin: 0;
-    color: var(--muted);
+    line-height: 0;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
   .hero-wafer {
     margin: 0;

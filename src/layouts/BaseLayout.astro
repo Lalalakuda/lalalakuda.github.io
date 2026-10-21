@@ -59,9 +59,8 @@ const current = Astro.url.pathname;
   <body>
     <header class="site-header">
       <div class="wrap header-inner">
-        <a class="brand" href={url('/')}>
-          <img src={url('/logo.svg')} alt="" width="36" height="36" />
-          {SITE_TITLE}
+        <a class="brand" href={url('/')} aria-label={`${SITE_TITLE} トップへ`}>
+          <img src={url('/logo.svg')} alt="" width="44" height="44" />
         </a>
         <nav aria-label="メインメニュー">
           <ul>
