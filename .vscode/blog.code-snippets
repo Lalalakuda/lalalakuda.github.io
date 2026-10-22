@@ -1,0 +1,14 @@
+{
+  "写真を入れる": {
+    "scope": "markdown",
+    "prefix": "img",
+    "body": ["![${2:写真の説明}](/photos/IMG-${1:0000}.jpeg)"],
+    "description": "public/photos の写真を挿入"
+  },
+  "写真＋キャプション": {
+    "scope": "markdown",
+    "prefix": "imgc",
+    "body": ["![${2:写真の説明}](/photos/IMG-${1:0000}.jpeg)", "*${3:キャプション}*"],
+    "description": "写真の下に小さな説明文をつける"
+  }
+}

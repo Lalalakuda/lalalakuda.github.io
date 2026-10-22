@@ -4,4 +4,6 @@
   },
   "markdown.editor.drop.copyIntoWorkspace": "mediaFiles",
   "markdown.editor.filePaste.copyIntoWorkspace": "mediaFiles"
+  "editor.tabCompletion": "on",
+  "[markdown]": { "editor.quickSuggestions": { "other": "on" } }
 }
