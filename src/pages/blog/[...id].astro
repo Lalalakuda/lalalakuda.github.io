@@ -49,6 +49,24 @@ const { title, description, pubDate, updatedDate, tags } = post.data;
     </footer>
   </article>
 </BaseLayout>
+<script>
+  // 記事内の写真の説明文を、写真の下にキャプションとして表示する
+  document.querySelectorAll('.prose img[alt]').forEach((img) => {
+    const text = img.getAttribute('alt');
+    if (!text || img.closest('figure')) return;
+    const fig = document.createElement('figure');
+    fig.className = 'photo';
+    const cap = document.createElement('figcaption');
+    cap.textContent = text;
+    const p = img.parentElement;
+    if (p && p.tagName === 'P' && p.childNodes.length === 1) {
+      p.replaceWith(fig);
+    } else {
+      img.before(fig);
+    }
+    fig.append(img, cap);
+  });
+</script>
 
 <style>
   .post-header {
