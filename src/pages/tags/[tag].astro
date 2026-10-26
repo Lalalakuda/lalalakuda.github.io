@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { url } from '../../utils';
+
+// タグごとに1ページずつ作る
+export async function getStaticPaths() {
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+  return tags.map((tag) => ({
+    params: { tag },
+    props: { tag, posts: posts.filter((post) => post.data.tags.includes(tag)) },
+  }));
+}
+
+interface Props {
+  tag: string;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`タグ「${tag}」の記事`} description={`タグ「${tag}」が付いた記事の一覧です。`}>
+  <div class="wrap">
+    <p class="back"><a href={url('/tags/')}>タグ一覧</a></p>
+    <h1>「{tag}」の記事 <span class="count">{posts.length} 件</span></h1>
+    <PostList posts={posts} />
+  </div>
+</BaseLayout>
+
+<style>
+  .back {
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+  }
+  h1 {
+    font-size: 1.75rem;
+    margin: 0 0 1.5rem;
+  }
+  .count {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+</style>

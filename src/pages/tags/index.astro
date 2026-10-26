@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { url } from '../../utils';
+
+// 公開記事のタグを集計して、記事数の多い順に並べる
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const counts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+}
+const tags = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ja'));
+---
+
+<BaseLayout title="タグ一覧" description="タグごとに記事を探せます。">
+  <div class="wrap">
+    <h1>タグ一覧</h1>
+    {
+      tags.length === 0 ? (
+        <p class="empty">まだタグの付いた記事がありません。</p>
+      ) : (
+        <ul class="tag-cloud">
+          {tags.map(([tag, n]) => (
+            <li>
+              <a href={url(`/tags/${tag}/`)}>
+                {tag}
+                <span class="count">{n}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 1.75rem;
+    margin: 0 0 1.5rem;
+  }
+  .tag-cloud {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+  }
+  .tag-cloud a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    text-decoration: none;
+  }
+  .tag-cloud a:hover {
+    border-color: var(--amber);
+  }
+  .count {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .empty {
+    color: var(--muted);
+  }
+</style>

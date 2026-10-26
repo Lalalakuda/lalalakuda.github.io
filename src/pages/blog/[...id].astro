@@ -5,18 +5,23 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { url, formatDate } from '../../utils';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
-  return posts.map((post) => ({
+  // 新しい順に並べて、前後の記事を決める
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+  return posts.map((post, i) => ({
     params: { id: post.id },
-    props: { post },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
   }));
 }
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  newer?: CollectionEntry<'blog'>;
+  older?: CollectionEntry<'blog'>;
 }
 
-const { post } = Astro.props;
+const { post, newer, older } = Astro.props;
 const { Content } = await render(post);
 const { title, description, pubDate, updatedDate, tags } = post.data;
 ---
@@ -33,7 +38,9 @@ const { title, description, pubDate, updatedDate, tags } = post.data;
         tags.length > 0 && (
           <ul class="tags" aria-label="タグ">
             {tags.map((tag) => (
-              <li>{tag}</li>
+              <li>
+                <a href={url(`/tags/${tag}/`)}>{tag}</a>
+              </li>
             ))}
           </ul>
         )
@@ -45,7 +52,27 @@ const { title, description, pubDate, updatedDate, tags } = post.data;
     </div>
 
     <footer class="post-footer">
-      <a href={url('/blog/')}>記事一覧へ戻る</a>
+      {
+        (older || newer) && (
+          <nav class="pager" aria-label="前後の記事">
+            {older ? (
+              <a class="pager-link prev" href={url(`/blog/${older.id}/`)}>
+                <span class="pager-label">前の記事</span>
+                <span class="pager-title">{older.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )}
+            {newer && (
+              <a class="pager-link next" href={url(`/blog/${newer.id}/`)}>
+                <span class="pager-label">次の記事</span>
+                <span class="pager-title">{newer.data.title}</span>
+              </a>
+            )}
+          </nav>
+        )
+      }
+      <a class="back" href={url('/blog/')}>記事一覧へ戻る</a>
     </footer>
   </article>
 </BaseLayout>
@@ -90,18 +117,61 @@ const { title, description, pubDate, updatedDate, tags } = post.data;
     margin: 1rem 0 0;
     padding: 0;
   }
-  .tags li {
+  .tags a {
+    display: inline-block;
     font-size: 0.8rem;
     line-height: 1.4;
     padding: 0.25rem 0.6rem;
     border: 1px solid var(--rule);
     border-radius: 999px;
     color: var(--muted);
+    text-decoration: none;
+  }
+  .tags a:hover {
+    border-color: var(--amber);
+    color: var(--ink);
   }
   .post-footer {
     margin-top: 3.5rem;
     padding-top: 1.25rem;
     border-top: 1px solid var(--rule);
     font-size: 0.95rem;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .pager-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    text-decoration: none;
+  }
+  .pager-link:hover {
+    border-color: var(--amber);
+  }
+  .next {
+    text-align: right;
+  }
+  .pager-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .pager-title {
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  @media (max-width: 520px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+    .pager > span:empty {
+      display: none;
+    }
   }
 </style>
