@@ -6,8 +6,7 @@ export const AUTHOR_NAME = 'ラララクダ';
 
 // 不要なリンクは空文字 '' にすると表示されません
 export const LINKS = {
-  linkedin: 'https://www.linkedin.com/in/your-id/',
-  github: 'https://github.com/YOUR-USERNAME',
+  github: 'https://github.com/Lalalakuda',
 };
 
 // 訪問者カウンター（GoatCounter）。登録したコード（○○.goatcounter.com の ○○）を入れると有効になります
